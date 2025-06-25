@@ -99,7 +99,7 @@ export default {
     async fetchDashboardData() {
       this.loader = true;
       try {
-        const res = await http.get("/dashboard-data");
+        // const res = await http.get("/dashboard-data");
 
         if (res.data.success) {
           this.userRole = res.data.role;

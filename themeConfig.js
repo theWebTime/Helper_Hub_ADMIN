@@ -15,7 +15,7 @@ import logo from "./src/assets/images/svg/logo.svg?raw";
 
 export const { themeConfig, layoutConfig } = defineThemeConfig({
   app: {
-    title: "Quotation Hub",
+    title: "Helper Hub",
     logo: h("div", {
       innerHTML: logo,
       style: "line-height:0; color: rgb(var(--v-global-theme-primary))",

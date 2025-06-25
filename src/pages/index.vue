@@ -1,84 +1,74 @@
 <template>
-  <VRow no-gutters class="auth-wrapper bg-surface fill-height d-flex align-center justify-center pa-4">
-    <VCol cols="12" sm="8" md="6" lg="4">
-      <VCard flat class="elevation-4 rounded-xl pa-6">
-        <VCardText class="text-center">
-          <!-- Logo -->
-          <div class="d-flex justify-center mb-4">
-            <!-- <VNodeRenderer :nodes="themeConfig.app.logo" /> -->
-            <!-- OR use <img> if you have a static image like: -->
-            <img src="@/assets/images/Quotation_Hub.png" alt="Logo" height="200" width="200" />
-          </div>
-          <!-- Title and subtitle -->
-          <h4 class="text-h4 font-weight-bold mb-1">
-            Welcome to {{ themeConfig.app.title }}
-          </h4>
-          <p class="text-body-2 mb-4">Please sign in to your account</p>
-        </VCardText>
+  <VRow no-gutters class="auth-wrapper bg-surface">
+    <!-- <VCol lg="8" class="d-none d-lg-flex">
+      <div class="position-relative bg-background rounded-lg w-100 ma-8 me-0">
+        <div class="d-flex align-center justify-center w-100 h-100">
+          <VImg
+            max-width="505"
+            :src="authThemeImg"
+            class="auth-illustration mt-16 mb-2"
+          />
+        </div>
 
-        <!-- Error Alert -->
-        <VAlert v-if="isAlertVisible" v-model="isAlertVisible" closable close-label="Close Alert" color="error"
-          class="mb-4">
-          <div class="d-flex flex-wrap" style="gap: 8px;">
-            <span v-for="(msg, index) in errors" :key="index" class="error-chip">
-              • {{ msg }}
-            </span>
-          </div>
+        <VImg :src="authThemeMask" class="auth-footer-mask" />
+      </div>
+    </VCol> -->
+
+    <VCol cols="12" lg="12" class="auth-card-v2 d-flex align-center justify-center">
+      <VCard flat :max-width="500" class="mt-12 mt-sm-0 pa-4">
+        <VCardText>
+          <!-- <VNodeRenderer :nodes="themeConfig.app.logo" class="mb-6" /> -->
+
+          <h5 class="text-h5 mb-1">
+            Welcome to
+            <span class="text-capitalize"> {{ themeConfig.app.title }} </span>!
+          </h5>
+
+          <p class="mb-0">
+            Please sign-in to your account and start the adventure
+          </p>
+        </VCardText>
+        <VAlert v-model="isAlertVisible" closable close-label="Close Alert" color="error">
+          <ul v-for="(value, key) in errors" :key="key">
+            <li v-for="(value1, key1) in value" :key="key1">-> {{ value1 }}</li>
+          </ul>
+          {{ value }}
         </VAlert>
 
         <VCardText>
           <VForm ref="formSubmit">
             <VRow>
-              <!-- Phone Number with icon -->
+              <!-- email -->
               <VCol cols="12">
-                <AppTextField v-model="loginObject.phone_number" label="Phone Number" type="number"
-                  prepend-inner-icon="tabler-phone" :rules="[globalRequire].flat()" autofocus density="comfortable" />
+                <AppTextField v-model="loginObject.email" label="Email" type="email"
+                  :rules="[globalRequire, email].flat()" autofocus />
               </VCol>
 
-              <!-- Password with visibility toggle icon -->
+              <!-- password -->
               <VCol cols="12">
                 <AppTextField v-model="loginObject.password" label="Password"
-                  :type="isPasswordVisible ? 'text' : 'password'" prepend-inner-icon="tabler-lock"
-                  :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
-                  :rules="[globalRequire].flat()" density="comfortable"
-                  @click:append-inner="isPasswordVisible = !isPasswordVisible" />
-              </VCol>
+                  :type="isPasswordVisible ? 'text' : 'password'" :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'
+                    " :rules="[globalRequire].flat()" @click:append-inner="isPasswordVisible = !isPasswordVisible" />
 
-              <!-- Login Button -->
-              <VCol cols="12" class="mt-2">
-                <VBtn block color="primary" @click="login" :disabled="isSubmit" size="large">
-                  <VProgressCircular v-if="isSubmit" :size="22" width="2" indeterminate color="white" />
-                  <span v-else>Login</span>
+                <div class="d-flex align-center flex-wrap justify-space-between mt-2 mb-4">
+                  <!-- <VCheckbox v-model="rememberMe" label="Remember me" /> -->
+                  <!-- <a class="text-primary ms-2 mb-1" href="#">
+                  Forgot Password?
+                </a> -->
+                </div>
+
+                <VBtn @click="login()" :disabled="isSubmit">
+                  <VProgressCircular v-if="isSubmit" :size="30" width="3" color="error" indeterminate />
+                  Login
                 </VBtn>
-              </VCol>
-              <VCol cols="12">
-                <RouterLink to="/register" class="text-decoration-none">
-                  <VBtn block variant="outlined" size="large">Register</VBtn>
-                </RouterLink>
-              </VCol>
-              <!-- Book a Demo Button -->
-              <VCol cols="12">
-                <RouterLink to="/bookDemo" class="text-decoration-none">
-                  <VBtn block variant="outlined" size="large">For More Inquiry</VBtn>
-                </RouterLink>
               </VCol>
             </VRow>
-            <VCol cols="12" class="text-center mt-4">
-              <a href="https://wa.me/919662961868?text=Hello%20Quotation%20Hub%20Support" target="_blank"
-                class="text-decoration-none">
-                <VBtn icon size="large" color="success" variant="text">
-                  <VIcon size="32">mdi-whatsapp</VIcon>
-                </VBtn>
-                <div class="text-body-2 mt-1">Chat with Support</div>
-              </a>
-            </VCol>
           </VForm>
         </VCardText>
       </VCard>
     </VCol>
   </VRow>
 </template>
-
 
 <script setup>
 import { useGenerateImageVariant } from "@core/composable/useGenerateImageVariant";
@@ -99,21 +89,22 @@ const authThemeImg = useGenerateImageVariant(
 );
 const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark);
 const isPasswordVisible = ref(false);
+const rememberMe = ref(false);
 </script>
-
 <script>
-import ls from "localstorage-slim";
 import { useToast } from "vue-toastification";
+import ls from "localstorage-slim";
 import http from "../http-common";
-
 const toast = useToast();
-
 export default {
   name: "login",
   data() {
     return {
       globalRequire: [
-        (value) => (value ? true : "Required."),
+        (value) => {
+          if (value) return true;
+          return "Required.";
+        },
       ],
       email: [
         (v) =>
@@ -122,7 +113,7 @@ export default {
           "Email must be valid",
       ],
       loginObject: {
-        phone_number: "",
+        email: "",
         password: "",
       },
       isSubmit: false,
@@ -139,10 +130,13 @@ export default {
           .post("/login", this.loginObject)
           .then((res) => {
             if (res.data.success) {
+              // this.$store.commit("login", res.data.data);
               ls.set("user-info", res.data.data, { encrypt: true });
               location.reload();
+              // this.$router.push({ name: "dashboard" });
             } else {
               toast.error(res.data.message);
+              console.log(res.data.data);
               if (res.data.data) {
                 this.errors = res.data.data;
                 this.isAlertVisible = true;
@@ -151,9 +145,7 @@ export default {
             this.isSubmit = false;
           })
           .catch((e) => {
-            toast.error("Login failed");
-            console.error(e);
-            this.isSubmit = false;
+            console.log(e);
           });
       }
     },
@@ -163,10 +155,6 @@ export default {
 
 <style lang="scss">
 @use "@core/scss/template/pages/page-auth.scss";
-
-.auth-wrapper {
-  min-height: 100vh;
-}
 </style>
 
 <route lang="yaml">

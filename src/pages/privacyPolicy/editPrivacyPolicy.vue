@@ -2,33 +2,25 @@
   <div>
     <GlobalBreadCrumbsVue></GlobalBreadCrumbsVue>
 
-    <VCard title="Update Data of this Conference Tag">
-      <VAlert
-        v-model="isAlertVisible"
-        closable
-        close-label="Close Alert"
-        color="error"
-      >
-        <ul v-for="(value, key) in errors" :key="key">
-          <li v-for="(value1, key1) in value" :key="key1">-> {{ value1 }}</li>
-        </ul>
-        {{ value }}
+    <VCard title="Update Privacy Policy Details">
+      <VAlert v-if="isAlertVisible" v-model="isAlertVisible" closable close-label="Close Alert" color="error"
+        class="mb-4">
+        <div class="d-flex flex-wrap" style="gap: 8px;">
+          <span v-for="(msg, index) in errors" :key="index" class="error-chip">
+            • {{ msg }}
+          </span>
+        </div>
       </VAlert>
       <VForm ref="formSubmit">
         <VCardText>
           <VRow>
             <VCol cols="12" md="6">
-              <AppTextField
-                :rules="[globalRequire, nameMin, nameMax].flat()"
-                v-model="insertData.title"
-                label="Title"
-              />
+              <v-textarea :rules="[globalRequire, nameMin].flat()" v-model="insertData.title"
+                label="Title" />
             </VCol>
             <VCol cols="12" md="6">
-              <VRadioGroup v-model="insertData.status" inline label="Status">
-                <VRadio label="Active" :value="1" density="compact" />
-                <VRadio label="In-Active" :value="0" density="compact" />
-              </VRadioGroup>
+              <v-textarea :rules="[globalRequire, nameMin].flat()" v-model="insertData.description"
+                label="Description" />
             </VCol>
           </VRow>
         </VCardText>
@@ -67,23 +59,24 @@ export default {
       ],
       nameMin: [
         (value) => {
-          if (value?.length <= 50) return true;
-          return "Must be at least 50 characters.";
+          if (!value) return "Required.";
+          if (value.length < 3) return "Must be at least 3 characters.";
+          return true;
         },
       ],
       nameMax: [
         (value) => {
-          if (value?.length >= 3) return true;
-          return "Must be at least 3 characters.";
+          if (!value) return "Required.";
+          if (value.length > 50) return "Must not exceed 50 characters.";
+          return true;
         },
       ],
       insertData: {
         title: "",
-        status: "",
-        conference_tag_id: this.$route.params.id,
+        description: "",
       },
-      conference_tag_id: this.$route.params.id,
       loader: false,
+      paramsId: this.$route.params.id,
       errors: {},
       isAlertVisible: false,
     };
@@ -95,14 +88,12 @@ export default {
     async fetchData() {
       this.loader = true;
       await http
-        .post("/conference-tag/show", {
-          conference_tag_id: this.conference_tag_id,
-        })
+        .get("/privacy-policy/show/" + this.paramsId)
         .then((res) => {
           if (res.data.success) {
             const resData = res.data.data;
             this.insertData.title = resData.title;
-            this.insertData.status = resData.status;
+            this.insertData.description = resData.description;
           }
         })
         .catch((e) => {
@@ -111,17 +102,14 @@ export default {
       this.loader = false;
     },
     async updateData() {
-      const checkValidation = await this.$refs.formSubmit.validate();
-      if (checkValidation.valid) {
         this.loader = true;
         http
-          .post("conference-tag/update", this.insertData)
+          .post("privacy-policy/update/" + this.paramsId, this.insertData)
           .then((res) => {
             if (res.data.success) {
-              this.fetchData();
               this.$toast.success(res.data.message);
               this.$router.push({
-                path: "/conferenceTag/list/",
+                path: "/privacyPolicy/list/",
               });
               this.isAlertVisible = false;
             } else {
@@ -134,7 +122,6 @@ export default {
           .catch((e) => {
             this.loader = false;
           });
-      }
     },
   },
 };

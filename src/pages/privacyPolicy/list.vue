@@ -18,6 +18,23 @@
             />
           </div>
           <VSpacer />
+  
+          <div class="app-user-search-filter d-flex align-center flex-wrap gap-4">
+            <!-- 👉 Search  -->
+            <div style="inline-size: 10rem">
+              <AppTextField
+                v-model="options.search"
+                placeholder="Search"
+                density="compact"
+                @keyup="fetchData()"
+              />
+            </div>
+          </div>
+          <div class="app-user-search-filter d-flex align-center flex-wrap gap-4">
+          <router-link to="/privacyPolicy/add">
+            <VBtn prepend-icon="tabler-plus"> Add Privacy Policy </VBtn>
+          </router-link>
+        </div>
         </VCardText>
         <VDivider />
         <v-skeleton-loader type="table" :loading="loader">
@@ -25,16 +42,8 @@
             <thead>
               <tr>
                 <th class="text-uppercase">ID.</th>
-                <th class="text-uppercase text-center" v-if="userData.role == 1">
-                  Domain
-                </th>
-                <th class="text-uppercase text-center">Name</th>
-                <th class="text-uppercase text-center">Email</th>
-                <th class="text-uppercase text-center">Phone Number</th>
-                <th class="text-uppercase text-center">Conference Plan</th>
-                <th class="text-uppercase text-center">Amount</th>
-                <th class="text-uppercase text-center">Transaction ID</th>
-                <th class="text-uppercase text-center">Status</th>
+                <th class="text-uppercase text-center">Title</th>
+                <th class="text-uppercase text-center">Action</th>
               </tr>
             </thead>
   
@@ -43,35 +52,30 @@
                 <td>
                   {{ (data.current_page - 1) * data.per_page + index + 1 }}
                 </td>
-                <td class="text-center" v-if="userData.role == 1">
-                  {{ item.domain }}
+                <td class="text-center">
+                  {{ item.title }}
                 </td>
                 <td class="text-center">
-                  {{ item.register_name }}
-                </td>
-                <td class="text-center">
-                  {{ item.register_email }}
-                </td>
-                <td class="text-center">
-                  {{ item.register_phone_number }}
-                </td>
-                <td class="text-center">
-                  {{ item.conference_plan_title }}
-                </td>
-                <td class="text-center">
-                  {{ item.amount }}
-                </td>
-                <td class="text-center">
-                  {{ item.transaction_id }}
-                </td>
-                <td class="text-center" v-if="item.status == 1">
-                    Pending
-                </td>
-                <td class="text-center" v-else-if="item.status == 2">
-                    Success
-                </td>
-                <td class="text-center" v-else>
-                    Cancel
+                  <router-link :to="'/privacyPolicy/editPrivacyPolicy/' + item.id">
+                    <IconBtn>
+                      <VIcon :icon="'tabler-edit-circle'" />
+  
+                      <VTooltip activator="parent" location="start">
+                        Edit Data
+                      </VTooltip>
+                    </IconBtn>
+                  </router-link>
+                  |
+                  <IconBtn>
+                    <VIcon
+                      class="text-primary"
+                      :icon="'tabler-trash-filled'"
+                      @click="openDeletePopup(item.id)"
+                    />
+                    <VTooltip activator="parent" location="start">
+                      Delete Data
+                    </VTooltip>
+                  </IconBtn>
                 </td>
               </tr>
             </tbody>
@@ -97,14 +101,23 @@
           </VPagination>
         </div>
       </VCard>
+      <VDialog v-model="isDeleteDialogVisible" width="500">
+        <!-- Dialog close btn -->
+        <DialogCloseBtn @click="closeDeletePopup()" />
+        <!-- Dialog Content -->
+        <VCard title="Are you Sure to delete?">
+          <VCardText class="d-flex justify-end">
+            <VBtn @click="deleteData()"> Yes </VBtn>
+          </VCardText>
+        </VCard>
+      </VDialog>
     </div>
   </template>
   <script>
   import GlobalBreadCrumbsVue from "@/components/common/GlobalBreadCrumbs.vue";
-  import ls from "localstorage-slim";
-  import { VDataTable } from "vuetify/labs/VDataTable";
-  import { VSkeletonLoader } from "vuetify/labs/VSkeletonLoader";
-  import http from "../http-common";
+import { VDataTable } from "vuetify/labs/VDataTable";
+import { VSkeletonLoader } from "vuetify/labs/VSkeletonLoader";
+import http from "../../http-common";
   export default {
     components: {
       GlobalBreadCrumbsVue,
@@ -113,7 +126,6 @@
     },
     data() {
       return {
-        userData: ls.get("user-info", { decrypt: true }),
         globalRequire: [
           (value) => {
             if (value) return true;
@@ -144,26 +156,63 @@
         this.options.page = this.options.page;
         this.fetchData();
       },
-      async fetchData() {
+      fetchData() {
         this.loader = true;
-        await http
-          .get("/payment/index/")
+        http
+          .get(
+            "/privacy-policy/index?page=" +
+              this.options.page +
+              "&itemsPerPage=" +
+              this.options.itemsPerPage +
+              "&search=" +
+              this.options.search
+          )
           .then((res) => {
             if (res.data.success) {
-              const resData = res.data.data;
-              this.data = resData;
+              this.data = res.data.data;
             }
+            this.loader = false;
           })
           .catch((e) => {
+            this.loader = false;
             console.log(e);
           });
-        this.loader = false;
       },
+  
+      openDeletePopup(val) {
+        this.editableId = val;
+        this.isDeleteDialogVisible = true;
+      },
+  
+      closeDeletePopup() {
+        this.editableId = "";
+        this.isDeleteDialogVisible = false;
+      },
+  
       paginationMeta(options, total) {
         const start = (options.page - 1) * options.itemsPerPage + 1;
         const end = Math.min(options.page * options.itemsPerPage, total);
   
         return `Showing ${start} to ${end} of ${total} entries`;
+      },
+  
+      deleteData() {
+        http
+          .post("/privacy-policy/delete/" + this.editableId, {})
+          .then((res) => {
+            if (res.data.success) {
+              this.fetchData();
+              this.$toast.success(res.data.message);
+            } else {
+              this.$toast.error(res.data.message);
+            }
+            this.editableId = "";
+            this.isDeleteDialogVisible = false;
+          })
+          .catch((e) => {
+            console.log(e);
+            this.isDeleteDialogVisible = false;
+          });
       },
     },
   };

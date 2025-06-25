@@ -1,7 +1,7 @@
 <template>
   <div>
     <GlobalBreadCrumbsVue></GlobalBreadCrumbsVue>
-    <VCard title="Add Conference Testimonial">
+    <VCard title="Add Privacy Policy">
       <VAlert
         v-model="isAlertVisible"
         closable
@@ -17,33 +17,17 @@
         <VCardText>
           <VRow>
             <VCol cols="12" md="6">
-              <label>Image</label>
-              <v-file-input
-                accept="image/*"
-                v-model="image"
-                ref="file"
+              <v-textarea
                 :rules="[globalRequire].flat()"
-              ></v-file-input>
-            </VCol>
-            <VCol cols="12" md="6">
-              <AppTextField
-                :rules="[globalRequire, nameMin, nameMax].flat()"
-                v-model="insertData.name"
-                label="Name"
+                v-model="insertData.title"
+                label="Title"
               />
             </VCol>
             <VCol cols="12" md="6">
-              <AppTextField
-                :rules="[globalRequire, nameMin, nameMax].flat()"
-                v-model="insertData.designation"
-                label="Designation"
-              />
-            </VCol>
-            <VCol cols="12" md="6">
-              <AppTextField
-                :rules="[globalRequire, reviewMin, reviewMax].flat()"
-                v-model="insertData.review"
-                label="Review"
+              <v-textarea
+                v-model="insertData.description"
+                :rules="[globalRequire].flat()"
+                label="Description"
               />
             </VCol>
           </VRow>
@@ -66,7 +50,7 @@
 </template>
 <script>
 import GlobalBreadCrumbsVue from "@/components/common/GlobalBreadCrumbs.vue";
-import http from "../../../http-common";
+import http from "../../http-common";
 export default {
   components: {
     GlobalBreadCrumbsVue,
@@ -79,37 +63,11 @@ export default {
           return "Required.";
         },
       ],
-      nameMin: [
-        (value) => {
-          if (value?.length <= 50) return true;
-          return "Must be at least 50 characters.";
-        },
-      ],
-      nameMax: [
-        (value) => {
-          if (value?.length >= 3) return true;
-          return "Must be at least 3 characters.";
-        },
-      ],
-      reviewMin: [
-        (value) => {
-          if (value?.length <= 200) return true;
-          return "Must be at least 200 characters.";
-        },
-      ],
-      reviewMax: [
-        (value) => {
-          if (value?.length >= 5) return true;
-          return "Must be at least 5 characters.";
-        },
-      ],
-      image: "",
       insertData: {
-        name: "",
-        designation: "",
-        review: "",
+        title: "",
+        description: "",
+        conference_id: this.$route.params.id,
       },
-      conference_id: this.$route.params.id,
       loader: false,
       errors: {},
       isAlertVisible: false,
@@ -119,24 +77,13 @@ export default {
     async saveData() {
       const checkValidation = await this.$refs.formSubmit.validate();
       if (checkValidation.valid) {
-        const formData = new FormData();
-        if (this.image) {
-          const imageData = this.$refs.file.files[0];
-          formData.append("image", imageData);
-        } else {
-          formData.append("image", "");
-        }
-        for (let x in this.insertData) {
-          formData.append(x, this.insertData[x]);
-        }
-        formData.append("conference_id", this.conference_id);
         this.loader = true;
         http
-          .post("conference-testimonial/store", formData)
+          .post("/privacy-policy/store", this.insertData)
           .then((res) => {
             if (res.data.success) {
               this.$router.push({
-                path: "/conference/list/",
+                path: "/privacyPolicy/list/",
               });
               this.$toast.success(res.data.message);
               this.isAlertVisible = false;
@@ -149,6 +96,7 @@ export default {
           })
           .catch((e) => {
             this.loader = false;
+            console.log(e);
           });
       }
     },

@@ -2,7 +2,7 @@
   <footer class="app-footer">
     <div class="footer-content">
       <span class="copyright">
-        &copy; {{ new Date().getFullYear() }} Quotation Hub
+        &copy; {{ new Date().getFullYear() }} Helper Hub
       </span>
       <a href="tel:+917862813861" class="developer-link" aria-label="Call to connect with The Web Time IT Solution">
         Developed By The Web Time IT Solution
