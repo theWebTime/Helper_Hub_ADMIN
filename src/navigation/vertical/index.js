@@ -50,4 +50,22 @@ const manageFaq = {
 
 route.push(manageFaq);
 
+const manageTermsCondition = {
+  title: "Terms & Condition",
+  to: null,
+  icon: { icon: "tabler-list" },
+  children: [
+    {
+      title: "Add",
+       to: { name: "termsCondition-add" },
+    },
+    {
+      title: "List",
+      to: { name: "termsCondition-list" },
+    },
+  ],
+};
+
+route.push(manageTermsCondition);
+
 export default route;
