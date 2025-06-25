@@ -32,4 +32,22 @@ const managePrivacyPolicy = {
 
 route.push(managePrivacyPolicy);
 
+const manageFaq = {
+  title: "FAQ",
+  to: null,
+  icon: { icon: "tabler-help-hexagon" },
+  children: [
+    {
+      title: "Add",
+       to: { name: "faq-add" },
+    },
+    {
+      title: "List",
+      to: { name: "faq-list" },
+    },
+  ],
+};
+
+route.push(manageFaq);
+
 export default route;
