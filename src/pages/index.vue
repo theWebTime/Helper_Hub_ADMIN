@@ -7,7 +7,7 @@
           <div class="d-flex justify-center mb-4">
             <!-- <VNodeRenderer :nodes="themeConfig.app.logo" /> -->
             <!-- OR use <img> if you have a static image like: -->
-            <img src="@/assets/images/Helper_Hub.png" alt="Logo" height="200" width="200" />
+            <img src="@/assets/images/Helper_Hub_Round.png" alt="Logo" height="200" width="200" />
           </div>
 
           <h5 class="text-h5 mb-1">
