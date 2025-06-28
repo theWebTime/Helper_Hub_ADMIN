@@ -38,6 +38,14 @@ const managePincode = {
 
 route.push(managePincode); 
 
+const manageUserAddress = {
+  title: "User Address",
+  to: { name: "userAddress" },
+  icon: { icon: "tabler-address-book" },
+};
+
+route.push(manageUserAddress); 
+
 const managePrivacyPolicy = {
   title: "Privacy Policy",
   to: null,
