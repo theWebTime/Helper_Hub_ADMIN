@@ -14,6 +14,14 @@ var route = [
     },
   ];
 
+const manageUser = {
+  title: "User",
+  to: { name: "user-list" },
+  icon: { icon: "tabler-user" },
+};
+
+route.push(manageUser); 
+
 const managePrivacyPolicy = {
   title: "Privacy Policy",
   to: null,
