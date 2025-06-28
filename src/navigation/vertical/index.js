@@ -30,6 +30,14 @@ const manageService = {
 
 route.push(manageService); 
 
+const managePincode = {
+  title: "Pincode",
+  to: { name: "pincode-list" },
+  icon: { icon: "tabler-number-123" },
+};
+
+route.push(managePincode); 
+
 const managePrivacyPolicy = {
   title: "Privacy Policy",
   to: null,
