@@ -21,11 +21,6 @@
                             @keyup="fetchData()" />
                     </div>
                 </div>
-                <div class="app-user-search-filter d-flex align-center flex-wrap gap-4">
-                    <router-link to="/pincode/add">
-                        <VBtn prepend-icon="tabler-plus"> Add Pincode </VBtn>
-                    </router-link>
-                </div>
             </VCardText>
             <VDivider />
             <v-skeleton-loader type="table" :loading="loader">
