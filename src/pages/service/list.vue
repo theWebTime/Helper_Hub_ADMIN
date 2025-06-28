@@ -29,7 +29,6 @@
                         <tr>
                             <th class="text-uppercase">ID.</th>
                             <th class="text-uppercase text-center">Name</th>
-                            <th class="text-uppercase text-center">Mobile</th>
                             <th class="text-uppercase text-center">Status</th>
                             <th class="text-uppercase text-center">Action</th>
                         </tr>
@@ -44,13 +43,10 @@
                                 {{ item.name }}
                             </td>
                             <td class="text-center">
-                                {{ item.mobile }}
-                            </td>
-                            <td class="text-center">
                                 {{ item.status == 1 ? "Active" : "In-Active" }}
                             </td>
                             <td class="text-center">
-                                <router-link :to="'/user/editUser/' + item.id">
+                                <router-link :to="'/service/editService/' + item.id">
                                     <IconBtn>
                                         <VIcon :icon="'tabler-edit-circle'" />
 
@@ -125,7 +121,7 @@ export default {
             this.loader = true;
             http
                 .get(
-                    "/user/index?page=" +
+                    "/service/index?page=" +
                     this.options.page +
                     "&itemsPerPage=" +
                     this.options.itemsPerPage +

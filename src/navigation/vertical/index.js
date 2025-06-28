@@ -22,6 +22,14 @@ const manageUser = {
 
 route.push(manageUser); 
 
+const manageService = {
+  title: "Service",
+  to: { name: "service-list" },
+  icon: { icon: "tabler-category" },
+};
+
+route.push(manageService); 
+
 const managePrivacyPolicy = {
   title: "Privacy Policy",
   to: null,
