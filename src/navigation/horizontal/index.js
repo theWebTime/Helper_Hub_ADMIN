@@ -105,4 +105,12 @@ const manageSiteSetting = {
 
 route.push(manageSiteSetting); 
 
+const manageSubServiceTypeName = {
+  title: "Sub Service Type Name",
+  to: { name: "subServiceTypeName" },
+  icon: { icon: "tabler-list-details" },
+};
+
+route.push(manageSubServiceTypeName); 
+
 export default route;
