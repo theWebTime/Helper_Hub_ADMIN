@@ -14,7 +14,7 @@
                         <VCol cols="12" md="4">
                             <AppSelect v-model="insertData.subservice_type_name_slug"
                                 :items="data_fetch_subservice_type_name_slug" :rules="[globalRequire].flat()"
-                                item-title="name" item-value="slug" label="Sub Service Slug Name" />
+                                item-title="name" item-value="slug" label="Select Sub Service Slug Name" />
                         </VCol>
                         <VCol cols="12" md="4">
                             <AppTextField :rules="[globalRequire].flat()" v-model="insertData.label" label="Label" />

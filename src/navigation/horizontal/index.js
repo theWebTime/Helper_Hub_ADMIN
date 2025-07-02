@@ -27,6 +27,24 @@ const manageService = {
 
 route.push(manageService); 
 
+const manageSubService = {
+  title: "Sub Service",
+  to: null,
+  icon: { icon: "tabler-clipboard-text" },
+  children: [
+    {
+      title: "Add",
+       to: { name: "subService-add" },
+    },
+    {
+      title: "List",
+      to: { name: "subService-list" },
+    },
+  ],
+};
+
+route.push(manageSubService);
+
 const managePincode = {
   title: "Pincode",
   to: { name: "pincode-list" },
