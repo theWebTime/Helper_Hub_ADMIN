@@ -19,11 +19,13 @@
             Please sign-in to your account and start the adventure
           </p>
         </VCardText>
-        <VAlert v-model="isAlertVisible" closable close-label="Close Alert" color="error">
-          <ul v-for="(value, key) in errors" :key="key">
-            <li v-for="(value1, key1) in value" :key="key1">-> {{ value1 }}</li>
-          </ul>
-          {{ value }}
+        <VAlert v-if="isAlertVisible" v-model="isAlertVisible" closable close-label="Close Alert" color="error"
+          class="mb-4">
+          <div class="d-flex flex-wrap" style="gap: 8px;">
+            <span v-for="(msg, index) in errors" :key="index" class="error-chip">
+              • {{ msg }}
+            </span>
+          </div>
         </VAlert>
 
         <VCardText>
