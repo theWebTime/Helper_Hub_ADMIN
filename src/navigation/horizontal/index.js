@@ -111,6 +111,24 @@ const manageSubServiceTypeName = {
   icon: { icon: "tabler-list-details" },
 };
 
-route.push(manageSubServiceTypeName); 
+route.push(manageSubServiceTypeName);
+
+const manageSubServiceTypeDetail = {
+  title: "Sub Service Type Detail",
+  to: null,
+  icon: { icon: "tabler-menu-deep" },
+  children: [
+    {
+      title: "Add",
+      to: { name: "subServiceTypeDetail-add" },
+    },
+    {
+      title: "List",
+      to: { name: "subServiceTypeDetail-list" },
+    },
+  ],
+};
+
+route.push(manageSubServiceTypeDetail);
 
 export default route;
