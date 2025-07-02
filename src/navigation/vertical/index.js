@@ -100,4 +100,12 @@ const manageTermsCondition = {
 
 route.push(manageTermsCondition);
 
+const manageSiteSetting = {
+  title: "Site Setting",
+  to: { name: "siteSetting" },
+  icon: { icon: "tabler-settings" },
+};
+
+route.push(manageSiteSetting); 
+
 export default route;
