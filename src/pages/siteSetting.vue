@@ -20,7 +20,7 @@
                         </VCol>
                         <VCol cols="12" md="6">
                             <VAvatar size="48">
-                                <VImg :src="fetch_photo" />
+                                <VImg :src="`${baseUrl}/images/siteSetting/${fetch_photo}`" />
                             </VAvatar>
                         </VCol>
                         <VCol cols="12" md="4">
@@ -115,6 +115,7 @@ export default {
     },
     data() {
         return {
+            baseUrl: import.meta.env.VITE_APP_BASE_URL,
             globalRequire: [
                 (value) => {
                     if (value) return true;
