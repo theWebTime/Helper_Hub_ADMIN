@@ -19,6 +19,14 @@ const manageUser = {
 
 route.push(manageUser); 
 
+const managePincode = {
+  title: "Pincode",
+  to: { name: "pincode-list" },
+  icon: { icon: "tabler-number-123" },
+};
+
+route.push(managePincode);
+
 const manageService = {
   title: "Service",
   to: { name: "service-list" },
@@ -27,10 +35,36 @@ const manageService = {
 
 route.push(manageService); 
 
+const manageSubServiceTypeName = {
+  title: "Sub Service Name",
+  to: { name: "subServiceTypeName" },
+  icon: { icon: "tabler-list-details" },
+};
+
+route.push(manageSubServiceTypeName);
+
+const manageSubServiceTypeDetail = {
+  title: "Sub Service Detail",
+  to: null,
+  icon: { icon: "tabler-book" },
+  children: [
+    {
+      title: "Add",
+      to: { name: "subServiceTypeDetail-add" },
+    },
+    {
+      title: "List",
+      to: { name: "subServiceTypeDetail-list" },
+    },
+  ],
+};
+
+route.push(manageSubServiceTypeDetail);
+
 const manageSubService = {
   title: "Sub Service",
   to: null,
-  icon: { icon: "tabler-clipboard-text" },
+  icon: { icon: "tabler-category-plus" },
   children: [
     {
       title: "Add",
@@ -45,39 +79,7 @@ const manageSubService = {
 
 route.push(manageSubService);
 
-const managePincode = {
-  title: "Pincode",
-  to: { name: "pincode-list" },
-  icon: { icon: "tabler-number-123" },
-};
-
-route.push(managePincode);
-
-const manageUserAddress = {
-  title: "User Address",
-  to: { name: "userAddress" },
-  icon: { icon: "tabler-address-book" },
-};
-
 route.push(manageUserAddress); 
-
-const managePrivacyPolicy = {
-  title: "Privacy Policy",
-  to: null,
-  icon: { icon: "tabler-clipboard-text" },
-  children: [
-    {
-      title: "Add",
-       to: { name: "privacyPolicy-add" },
-    },
-    {
-      title: "List",
-      to: { name: "privacyPolicy-list" },
-    },
-  ],
-};
-
-route.push(managePrivacyPolicy);
 
 const manageFaq = {
   title: "FAQ",
@@ -97,10 +99,28 @@ const manageFaq = {
 
 route.push(manageFaq);
 
+const managePrivacyPolicy = {
+  title: "Privacy Policy",
+  to: null,
+  icon: { icon: "tabler-list-check" },
+  children: [
+    {
+      title: "Add",
+       to: { name: "privacyPolicy-add" },
+    },
+    {
+      title: "List",
+      to: { name: "privacyPolicy-list" },
+    },
+  ],
+};
+
+route.push(managePrivacyPolicy);
+
 const manageTermsCondition = {
   title: "Terms & Condition",
   to: null,
-  icon: { icon: "tabler-list" },
+  icon: { icon: "tabler-list-numbers" },
   children: [
     {
       title: "Add",
@@ -123,30 +143,10 @@ const manageSiteSetting = {
 
 route.push(manageSiteSetting); 
 
-const manageSubServiceTypeName = {
-  title: "Sub Service Type Name",
-  to: { name: "subServiceTypeName" },
-  icon: { icon: "tabler-list-details" },
+const manageUserAddress = {
+  title: "User Address",
+  to: { name: "userAddress" },
+  icon: { icon: "tabler-address-book" },
 };
-
-route.push(manageSubServiceTypeName);
-
-const manageSubServiceTypeDetail = {
-  title: "Sub Service Type Detail",
-  to: null,
-  icon: { icon: "tabler-menu-deep" },
-  children: [
-    {
-      title: "Add",
-      to: { name: "subServiceTypeDetail-add" },
-    },
-    {
-      title: "List",
-      to: { name: "subServiceTypeDetail-list" },
-    },
-  ],
-};
-
-route.push(manageSubServiceTypeDetail);
 
 export default route;
