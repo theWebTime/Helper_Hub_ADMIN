@@ -1,24 +1,21 @@
 <template>
-  <VRow no-gutters class="auth-wrapper bg-surface">
-    <VCol cols="12" lg="12" class="auth-card-v2 d-flex align-center justify-center">
-      <VCard flat :max-width="500" class="mt-12 mt-sm-0 pa-4">
-        <VCardText>
+  <VRow no-gutters class="auth-wrapper bg-surface fill-height d-flex align-center justify-center pa-4">
+    <VCol cols="12" sm="8" md="6" lg="4">
+      <VCard flat class="elevation-4 rounded-xl pa-6">
+        <VCardText class="text-center">
           <!-- Logo -->
           <div class="d-flex justify-center mb-4">
-            <!-- <VNodeRenderer :nodes="themeConfig.app.logo" /> -->
-            <!-- OR use <img> if you have a static image like: -->
-            <img src="@/assets/images/Helper_Hub_Round.png" alt="Logo" height="200" width="200" />
+            <img src="@/assets/images/Helper_Hub_Round.png" alt="Logo" height="120" width="120"
+              style="border-radius:50%; box-shadow: 0 2px 12px #0001;">
           </div>
-
-          <h5 class="text-h5 mb-1">
-            Welcome to
-            <span class="text-capitalize"> {{ themeConfig.app.title }} </span>!
-          </h5>
-
-          <p class="mb-0">
-            Please sign-in to your account and start the adventure
-          </p>
+          <!-- Title and subtitle -->
+          <h4 class="text-h4 font-weight-bold mb-1">
+            Welcome to {{ themeConfig.app.title }}
+          </h4>
+          <p class="text-body-2 mb-4">Please sign in to your account</p>
         </VCardText>
+
+        <!-- Error Alert -->
         <VAlert v-if="isAlertVisible" v-model="isAlertVisible" closable close-label="Close Alert" color="error"
           class="mb-4">
           <div class="d-flex flex-wrap" style="gap: 8px;">
@@ -31,30 +28,29 @@
         <VCardText>
           <VForm ref="formSubmit">
             <VRow>
-              <!-- email -->
+              <!-- Email with icon -->
               <VCol cols="12">
-                <AppTextField v-model="loginObject.email" label="Email" type="email"
-                  :rules="[globalRequire, email].flat()" autofocus />
+                <AppTextField v-model="loginObject.email" label="Email" type="email" prepend-inner-icon="tabler-mail"
+                  :rules="[globalRequire, email].flat()" autofocus density="comfortable" />
               </VCol>
 
-              <!-- password -->
+              <!-- Password with visibility toggle -->
               <VCol cols="12">
                 <AppTextField v-model="loginObject.password" label="Password"
-                  :type="isPasswordVisible ? 'text' : 'password'" :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'
-                    " :rules="[globalRequire].flat()" @click:append-inner="isPasswordVisible = !isPasswordVisible" />
+                  :type="isPasswordVisible ? 'text' : 'password'" prepend-inner-icon="tabler-lock"
+                  :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+                  :rules="[globalRequire].flat()" density="comfortable"
+                  @click:append-inner="isPasswordVisible = !isPasswordVisible" @keyup.enter="login" />
+              </VCol>
 
-                <div class="d-flex align-center flex-wrap justify-space-between mt-2 mb-4">
-                  <!-- <VCheckbox v-model="rememberMe" label="Remember me" /> -->
-                  <!-- <a class="text-primary ms-2 mb-1" href="#">
-                  Forgot Password?
-                </a> -->
-                </div>
-
-                <VBtn @click="login()" :disabled="isSubmit">
-                  <VProgressCircular v-if="isSubmit" :size="30" width="3" color="error" indeterminate />
-                  Login
+              <!-- Login Button -->
+              <VCol cols="12" class="mt-2">
+                <VBtn block color="primary" @click="login" :disabled="isSubmit" size="large">
+                  <VProgressCircular v-if="isSubmit" :size="22" width="2" indeterminate color="white" />
+                  <span v-else>Login</span>
                 </VBtn>
               </VCol>
+
             </VRow>
           </VForm>
         </VCardText>
@@ -72,7 +68,6 @@ import authV2LoginIllustrationLight from "@images/pages/auth-v2-login-illustrati
 import authV2MaskDark from "@images/pages/misc-mask-dark.png";
 import authV2MaskLight from "@images/pages/misc-mask-light.png";
 import { themeConfig } from "@themeConfig";
-
 const authThemeImg = useGenerateImageVariant(
   authV2LoginIllustrationLight,
   authV2LoginIllustrationDark,
@@ -82,8 +77,8 @@ const authThemeImg = useGenerateImageVariant(
 );
 const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark);
 const isPasswordVisible = ref(false);
-const rememberMe = ref(false);
 </script>
+
 <script>
 import ls from "localstorage-slim";
 import { useToast } from "vue-toastification";
@@ -94,10 +89,7 @@ export default {
   data() {
     return {
       globalRequire: [
-        (value) => {
-          if (value) return true;
-          return "Required.";
-        },
+        (value) => (value ? true : "Required."),
       ],
       email: [
         (v) =>
@@ -123,13 +115,10 @@ export default {
           .post("/login", this.loginObject)
           .then((res) => {
             if (res.data.success) {
-              // this.$store.commit("login", res.data.data);
               ls.set("user-info", res.data.data, { encrypt: true });
               location.reload();
-              // this.$router.push({ name: "dashboard" });
             } else {
               toast.error(res.data.message);
-              console.log(res.data.data);
               if (res.data.data) {
                 this.errors = res.data.data;
                 this.isAlertVisible = true;
@@ -138,7 +127,9 @@ export default {
             this.isSubmit = false;
           })
           .catch((e) => {
-            console.log(e);
+            toast.error("Login failed");
+            console.error(e);
+            this.isSubmit = false;
           });
       }
     },
@@ -148,6 +139,10 @@ export default {
 
 <style lang="scss">
 @use "@core/scss/template/pages/page-auth.scss";
+
+.auth-wrapper {
+  min-height: 100vh;
+}
 </style>
 
 <route lang="yaml">
