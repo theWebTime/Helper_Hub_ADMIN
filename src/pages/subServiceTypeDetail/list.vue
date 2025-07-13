@@ -31,6 +31,7 @@
                     <thead>
                         <tr>
                             <th class="text-uppercase">ID.</th>
+                            <th class="text-uppercase text-center">Service Name</th>
                             <th class="text-uppercase text-center">Slug</th>
                             <th class="text-uppercase text-center">Label</th>
                             <th class="text-uppercase text-center">Price</th>
@@ -42,6 +43,9 @@
                         <tr v-for="(item, index) in data.data" :key="index">
                             <td>
                                 {{ (data.current_page - 1) * data.per_page + index + 1 }}
+                            </td>
+                            <td class="text-center">
+                                {{ item.service_name }}
                             </td>
                             <td class="text-center">
                                 {{ item.subservice_type_name_slug }}

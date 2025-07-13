@@ -13,6 +13,11 @@
                 <VCardText>
                     <VRow>
                         <VCol cols="12" md="4">
+                            <AppSelect v-model="insertData.service_id" :items="data_fetch_service"
+                                :rules="[globalRequire].flat()" item-title="name" item-value="id"
+                                label="Select Service" />
+                        </VCol>
+                        <VCol cols="12" md="4">
                             <AppSelect v-model="insertData.subservice_type_name_slug"
                                 :items="data_fetch_subservice_type_name_slug" :rules="[globalRequire].flat()"
                                 item-title="name" item-value="slug" label="Sub Service Slug Name" />
@@ -65,11 +70,13 @@ export default {
                 },
             ],
             insertData: {
+                service_id: "",
                 subservice_type_name_slug: "",
                 label: "",
                 price: "",
             },
             data_fetch_subservice_type_name_slug: "",
+            data_fetch_service: "",
             loader: false,
             paramsId: this.$route.params.id,
             errors: {},
@@ -78,9 +85,22 @@ export default {
     },
     created() {
         this.fetchData();
+        this.fetch_service();
         this.fetch_sub_service_type_name();
     },
     methods: {
+        fetch_service() {
+            http
+                .get("/sub-service/service-name-list")
+                .then((res) => {
+                    if (res.data.success) {
+                        this.data_fetch_service = res.data.data;
+                    }
+                })
+                .catch((e) => {
+                    this.$toast.error("Something went wrong");
+                });
+        },
         fetch_sub_service_type_name() {
             http
                 .get("/sub-service-type-detail/sub-service-type-name-list")
@@ -100,6 +120,8 @@ export default {
                 .then((res) => {
                     if (res.data.success) {
                         const resData = res.data.data;
+                        this.insertData.service_id = resData.service_id;
+
                         this.insertData.subservice_type_name_slug = resData.subservice_type_name_slug;
                         this.insertData.label = resData.label;
                         this.insertData.price = resData.price;
