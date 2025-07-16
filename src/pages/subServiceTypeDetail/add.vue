@@ -11,20 +11,20 @@
             <VForm ref="formSubmit">
                 <VCardText>
                     <VRow>
-                        <VCol cols="12" md="4">
+                        <VCol cols="12" md="6">
                             <AppSelect v-model="insertData.service_id" :items="data_fetch_service"
                                 :rules="[globalRequire].flat()" item-title="name" item-value="id"
                                 label="Select Service" />
                         </VCol>
-                        <VCol cols="12" md="4">
+                        <VCol cols="12" md="6">
                             <AppSelect v-model="insertData.subservice_type_name_slug"
                                 :items="data_fetch_subservice_type_name_slug" :rules="[globalRequire].flat()"
                                 item-title="name" item-value="slug" label="Select Sub Service Slug Name" />
                         </VCol>
-                        <VCol cols="12" md="4">
+                        <VCol cols="12" md="6">
                             <AppTextField :rules="[globalRequire].flat()" v-model="insertData.label" label="Label" />
                         </VCol>
-                        <VCol cols="12" md="4">
+                        <VCol cols="12" md="6">
                             <AppTextField v-model="insertData.price" :rules="[globalRequire].flat()" typee="number"
                                 label="Price" />
                         </VCol>

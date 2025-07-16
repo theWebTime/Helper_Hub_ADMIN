@@ -19,7 +19,7 @@
                             <v-file-input accept="image/*" v-model="logo" label="Logo" ref="file"></v-file-input>
                         </VCol>
                         <VCol cols="12" md="6">
-                            <VAvatar size="48">
+                            <VAvatar size="100">
                                 <VImg :src="`${baseUrl}/images/siteSetting/${fetch_photo}`" />
                             </VAvatar>
                         </VCol>

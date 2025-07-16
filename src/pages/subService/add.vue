@@ -27,7 +27,7 @@
                         <VCol cols="12" md="6">
                             <v-textarea v-model="insertData.description" label="Description" />
                         </VCol>
-                        <VCol cols="12" md="3">
+                        <VCol cols="12" md="6">
                             <label>Service Image</label>
                             <v-file-input accept="image/*" v-model="image" ref="file"></v-file-input>
                         </VCol>

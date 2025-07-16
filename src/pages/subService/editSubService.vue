@@ -20,28 +20,28 @@
                             <v-file-input accept="image/*" v-model="image" ref="file"></v-file-input>
                         </VCol>
                         <VCol cols="12" md="3">
-                            <VAvatar size="48">
+                            <VAvatar size="100">
                                 <VImg :src="`${baseUrl}/images/subService/${fetch_photo}`" class="rounded-square"
                                     cover />
                             </VAvatar>
                         </VCol>
-                        <VCol cols="12" md="4">
+                        <VCol cols="12" md="6">
                             <AppSelect v-model="insertData.service_id" :items="data_fetch_service"
                                 :rules="[globalRequire].flat()" item-title="name" item-value="id"
                                 label="Select Service" />
                         </VCol>
-                        <VCol cols="12" md="4">
+                        <VCol cols="12" md="6">
                             <AppSelect v-model="insertData.type_slugs" :items="data_fetch_subservice_type_name_slug"
                                 :rules="[globalRequire].flat()" item-title="name" item-value="slug"
                                 label="Select Multiple Slug Name" multiple chips />
                         </VCol>
-                        <VCol cols="12" md="4">
+                        <VCol cols="12" md="6">
                             <AppTextField :rules="[globalRequire].flat()" v-model="insertData.name" label="Name" />
                         </VCol>
                         <VCol cols="12" md="6">
                             <v-textarea v-model="insertData.description" label="Description" />
                         </VCol>
-                        <VCol cols="12" md="3">
+                        <VCol cols="12" md="6">
                             <VRadioGroup v-model="insertData.status" inline label="Status">
                                 <VRadio label="Active" :value="1" density="compact" />
                                 <VRadio label="In-Active" :value="0" density="compact" />

@@ -39,7 +39,7 @@ const manageService = {
 route.push(manageService); 
 
 const manageSubServiceTypeName = {
-  title: "Sub Service Name",
+  title: "Sub Service Types",
   to: { name: "subServiceTypeName" },
   icon: { icon: "tabler-list-details" },
 };
@@ -47,9 +47,9 @@ const manageSubServiceTypeName = {
 route.push(manageSubServiceTypeName); 
 
 const manageSubServiceTypeDetail = {
-  title: "Sub Service Detail",
+  title: "Sub Service Pricing",
   to: null,
-  icon: { icon: "tabler-book" },
+  icon: { icon: "tabler-currency-rupee" },
   children: [
     {
       title: "Add",
@@ -136,6 +136,22 @@ const manageTermsCondition = {
 
 route.push(manageTermsCondition);
 
+const manageUserAddress = {
+  title: "User Address",
+  to: { name: "userAddress" },
+  icon: { icon: "tabler-address-book" },
+};
+
+route.push(manageUserAddress);
+
+const manageContactUs = {
+  title: "Contact Us",
+  to: { name: "contactUs" },
+  icon: { icon: "tabler-article" },
+};
+
+route.push(manageContactUs); 
+
 const manageSiteSetting = {
   title: "Site Setting",
   to: { name: "siteSetting" },
@@ -143,13 +159,5 @@ const manageSiteSetting = {
 };
 
 route.push(manageSiteSetting); 
-
-const manageUserAddress = {
-  title: "User Address",
-  to: { name: "userAddress" },
-  icon: { icon: "tabler-address-book" },
-};
-
-route.push(manageUserAddress); 
 
 export default route;
