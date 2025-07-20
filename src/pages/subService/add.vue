@@ -2,27 +2,28 @@
     <div>
         <GlobalBreadCrumbsVue></GlobalBreadCrumbsVue>
         <VCard title="Add Sub Service">
-            <VAlert v-model="isAlertVisible" closable close-label="Close Alert" color="error">
-                <ul v-for="(value, key) in errors" :key="key">
-                    <li v-for="(value1, key1) in value" :key="key1">-> {{ value1 }}</li>
-                </ul>
-                {{ value }}
-            </VAlert>
             <VForm ref="formSubmit">
                 <VCardText>
                     <VRow>
                         <VCol cols="12" md="4">
+                            <label class="custom-label">
+                                Select Service <span class="red-asterisk">*</span>
+                            </label>
                             <AppSelect v-model="insertData.service_id" :items="data_fetch_service"
-                                :rules="[globalRequire].flat()" item-title="name" item-value="id"
-                                label="Select Service" />
+                                :rules="[globalRequire].flat()" item-title="name" item-value="id" />
                         </VCol>
                         <VCol cols="12" md="4">
+                            <label class="custom-label">
+                                Select Multiple Slug Name <span class="red-asterisk">*</span>
+                            </label>
                             <AppSelect v-model="insertData.type_slugs" :items="data_fetch_subservice_type_name_slug"
-                                :rules="[globalRequire].flat()" item-title="name" item-value="slug"
-                                label="Select Multiple Slug Name" multiple chips />
+                                :rules="[globalRequire].flat()" item-title="name" item-value="slug" multiple chips />
                         </VCol>
                         <VCol cols="12" md="4">
-                            <AppTextField :rules="[globalRequire].flat()" v-model="insertData.name" label="Name" />
+                            <label class="custom-label">
+                                Sub Service Name <span class="red-asterisk">*</span>
+                            </label>
+                            <AppTextField :rules="[globalRequire].flat()" v-model="insertData.name" />
                         </VCol>
                         <VCol cols="12" md="6">
                             <v-textarea v-model="insertData.description" label="Description" />
@@ -33,6 +34,14 @@
                         </VCol>
                     </VRow>
                 </VCardText>
+                <VAlert v-if="isAlertVisible && summaryErrors.length" v-model="isAlertVisible" closable
+                    close-label="Close Alert" color="error" class="mb-4">
+                    <div class="d-flex flex-wrap" style="gap: 8px;">
+                        <span v-for="(msg, index) in summaryErrors" :key="index" class="error-chip">
+                            {{ msg }}
+                        </span>
+                    </div>
+                </VAlert>
                 <VCardText class="d-flex justify-end flex-wrap gap-3">
                     <VBtn @click="saveData"> Save </VBtn>
                 </VCardText>
@@ -82,6 +91,11 @@ export default {
             loader: false,
             errors: {},
             isAlertVisible: false,
+            requiredFieldsMeta: [
+                { label: 'Service', path: 'service_id' },
+                { label: 'Slug Name', path: 'type_slugs' },
+                { label: 'Sub Service', path: 'name' },
+            ],
         };
     },
     created() {
@@ -89,6 +103,21 @@ export default {
         this.fetch_sub_service_type_name();
     },
     methods: {
+        collectMissingFields() {
+            const missing = [];
+            this.requiredFieldsMeta.forEach(field => {
+                const value = this.insertData[field.path];
+                if (
+                    value === null || // null or undefined
+                    value === undefined ||
+                    value === '' ||
+                    (Array.isArray(value) && value.length === 0)
+                ) {
+                    missing.push(field.label);
+                }
+            });
+            return missing;
+        },
         fetch_service() {
             http
                 .get("/sub-service/service-name-list")
@@ -115,40 +144,63 @@ export default {
         },
         async saveData() {
             const checkValidation = await this.$refs.formSubmit.validate();
-            if (checkValidation.valid) {
-                const formData = new FormData();
-                if (this.image) {
-                    const imageData = this.$refs.file.files[0];
-                    formData.append("image", imageData);
-                } else {
-                    formData.append("image", "");
-                }
-                for (let x in this.insertData) {
-                    formData.append(x, this.insertData[x]);
-                }
-                this.loader = true;
-                http
-                    .post("/sub-service/store", formData)
-                    .then((res) => {
-                        if (res.data.success) {
-                            this.$router.push({
-                                path: "/subService/list/",
-                            });
-                            this.$toast.success(res.data.message);
-                            this.isAlertVisible = false;
-                        } else {
-                            this.$toast.error(res.data.message);
-                            this.errors = res.data.data;
-                            this.isAlertVisible = true;
-                        }
-                        this.loader = false;
-                    })
-                    .catch((e) => {
-                        this.loader = false;
-                        console.log(e);
-                    });
+            // Collect missing fields for summary
+            const missingFields = this.collectMissingFields();
+
+            if (!checkValidation.valid || missingFields.length > 0) {
+                this.summaryErrors = missingFields.map(f => `${f} is required.`);
+                this.isAlertVisible = true;
+                // Optionally scroll to alert
+                return;
+            } else {
+                this.summaryErrors = [];
             }
+            const formData = new FormData();
+            if (this.image) {
+                const imageData = this.$refs.file.files[0];
+                formData.append("image", imageData);
+            } else {
+                formData.append("image", "");
+            }
+            for (let x in this.insertData) {
+                formData.append(x, this.insertData[x]);
+            }
+            this.loader = true;
+            http
+                .post("/sub-service/store", formData)
+                .then((res) => {
+                    if (res.data.success) {
+                        this.$router.push({
+                            path: "/subService/list/",
+                        });
+                        this.$toast.success(res.data.message);
+                        this.isAlertVisible = false;
+                        this.summaryErrors = [];
+                    } else {
+                        this.$toast.error(res.data.message);
+                        this.errors = res.data.data;
+                        this.isAlertVisible = true;
+                    }
+                    this.loader = false;
+                })
+                .catch((e) => {
+                    this.loader = false;
+                    console.log(e);
+                });
+
         },
     },
 };
 </script>
+<style scoped>
+.custom-label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
+}
+
+.red-asterisk {
+    color: red;
+}
+</style>

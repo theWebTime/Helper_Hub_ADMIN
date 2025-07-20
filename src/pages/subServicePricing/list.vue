@@ -20,8 +20,8 @@
                         <AppTextField v-model="options.search" placeholder="Search" density="compact"
                             @keyup="fetchData()" />
                     </div>
-                    <router-link to="/subServiceTypeDetail/add">
-                        <VBtn prepend-icon="tabler-plus"> Add Sub Service Type Detail</VBtn>
+                    <router-link to="/subServicePricing/add">
+                        <VBtn prepend-icon="tabler-plus"> Add Sub Service Pricing</VBtn>
                     </router-link>
                 </div>
             </VCardText>
@@ -57,7 +57,7 @@
                                 {{ item.price }}
                             </td>
                             <td class="text-center">
-                                <router-link :to="'/subServiceTypeDetail/editSubServiceTypeDetail/' + item.id">
+                                <router-link :to="'/subServicePricing/editSubServicePricing/' + item.id">
                                     <IconBtn>
                                         <VIcon :icon="'tabler-edit-circle'" />
 

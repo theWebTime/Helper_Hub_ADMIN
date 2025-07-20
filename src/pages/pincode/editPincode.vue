@@ -1,16 +1,7 @@
 <template>
     <div>
         <GlobalBreadCrumbsVue></GlobalBreadCrumbsVue>
-
         <VCard title="Update Pincode ">
-            <VAlert v-if="isAlertVisible" v-model="isAlertVisible" closable close-label="Close Alert" color="error"
-                class="mb-4">
-                <div class="d-flex flex-wrap" style="gap: 8px;">
-                    <span v-for="(msg, index) in errors" :key="index" class="error-chip">
-                        • {{ msg }}
-                    </span>
-                </div>
-            </VAlert>
             <VForm ref="formSubmit">
                 <VCardText>
                     <VRow>
@@ -19,14 +10,24 @@
                                 v-model="insertData.pin_code" label="Pincode" />
                         </VCol>
                         <VCol cols="12" md="3">
-                            <VRadioGroup v-model="insertData.status" inline label="Status">
+                            <label class="custom-label">
+                                Status <span class="red-asterisk">*</span>
+                            </label>
+                            <VRadioGroup :rules="[globalRequire].flat()" v-model="insertData.status" inline>
                                 <VRadio label="Active" :value="1" density="compact" />
                                 <VRadio label="In-Active" :value="0" density="compact" />
                             </VRadioGroup>
                         </VCol>
                     </VRow>
                 </VCardText>
-
+                <VAlert v-if="isAlertVisible && summaryErrors.length" v-model="isAlertVisible" closable
+                    close-label="Close Alert" color="error" class="mb-4">
+                    <div class="d-flex flex-wrap" style="gap: 8px;">
+                        <span v-for="(msg, index) in summaryErrors" :key="index" class="error-chip">
+                            {{ msg }}
+                        </span>
+                    </div>
+                </VAlert>
                 <VCardText class="d-flex justify-end flex-wrap gap-3">
                     <VBtn @click="updateData"> Update </VBtn>
                 </VCardText>
@@ -79,12 +80,31 @@ export default {
             paramsId: this.$route.params.id,
             errors: {},
             isAlertVisible: false,
+            requiredFieldsMeta: [
+                { label: 'Pincode', path: 'pin_code' },
+                { label: 'Status', path: 'status' },
+            ],
         };
     },
     created() {
         this.fetchData();
     },
     methods: {
+        collectMissingFields() {
+            const missing = [];
+            this.requiredFieldsMeta.forEach(field => {
+                const value = this.insertData[field.path];
+                if (
+                    value === null || // null or undefined
+                    value === undefined ||
+                    value === '' ||
+                    (Array.isArray(value) && value.length === 0)
+                ) {
+                    missing.push(field.label);
+                }
+            });
+            return missing;
+        },
         async fetchData() {
             this.loader = true;
             await http
@@ -102,6 +122,18 @@ export default {
             this.loader = false;
         },
         async updateData() {
+            const checkValidation = await this.$refs.formSubmit.validate();
+            // Collect missing fields for summary
+            const missingFields = this.collectMissingFields();
+
+            if (!checkValidation.valid || missingFields.length > 0) {
+                this.summaryErrors = missingFields.map(f => `${f} is required.`);
+                this.isAlertVisible = true;
+                // Optionally scroll to alert
+                return;
+            } else {
+                this.summaryErrors = [];
+            }
             this.loader = true;
             http
                 .post("pincode/update/" + this.paramsId, this.insertData)
@@ -112,6 +144,7 @@ export default {
                             path: "/pincode/list/",
                         });
                         this.isAlertVisible = false;
+                        this.summaryErrors = [];
                     } else {
                         this.$toast.error(res.data.message);
                         this.errors = res.data.data;
@@ -126,3 +159,15 @@ export default {
     },
 };
 </script>
+<style scoped>
+.custom-label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
+}
+
+.red-asterisk {
+    color: red;
+}
+</style>

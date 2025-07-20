@@ -46,23 +46,23 @@ const manageSubServiceTypeName = {
 
 route.push(manageSubServiceTypeName); 
 
-const manageSubServiceTypeDetail = {
+const manageSubServicePricing = {
   title: "Sub Service Pricing",
   to: null,
   icon: { icon: "tabler-currency-rupee" },
   children: [
     {
       title: "Add",
-      to: { name: "subServiceTypeDetail-add" },
+      to: { name: "subServicePricing-add" },
     },
     {
       title: "List",
-      to: { name: "subServiceTypeDetail-list" },
+      to: { name: "subServicePricing-list" },
     },
   ],
 };
 
-route.push(manageSubServiceTypeDetail);
+route.push(manageSubServicePricing);
 
 const manageSubService = {
   title: "Sub Service",

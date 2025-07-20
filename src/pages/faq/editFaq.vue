@@ -1,30 +1,32 @@
 <template>
     <div>
         <GlobalBreadCrumbsVue></GlobalBreadCrumbsVue>
-
         <VCard title="Update FAQ Details">
-            <VAlert v-if="isAlertVisible" v-model="isAlertVisible" closable close-label="Close Alert" color="error"
-                class="mb-4">
-                <div class="d-flex flex-wrap" style="gap: 8px;">
-                    <span v-for="(msg, index) in errors" :key="index" class="error-chip">
-                        • {{ msg }}
-                    </span>
-                </div>
-            </VAlert>
             <VForm ref="formSubmit">
                 <VCardText>
                     <VRow>
                         <VCol cols="12" md="6">
-                            <v-textarea :rules="[globalRequire, nameMin].flat()" v-model="insertData.question"
-                                label="Question" />
+                            <label class="custom-label">
+                                Question <span class="red-asterisk">*</span>
+                            </label>
+                            <v-textarea :rules="[globalRequire].flat()" v-model="insertData.question" />
                         </VCol>
                         <VCol cols="12" md="6">
-                            <v-textarea :rules="[globalRequire, nameMin].flat()" v-model="insertData.answer"
-                                label="Answer" />
+                            <label class="custom-label">
+                                Answer <span class="red-asterisk">*</span>
+                            </label>
+                            <v-textarea :rules="[globalRequire].flat()" v-model="insertData.answer" />
                         </VCol>
                     </VRow>
                 </VCardText>
-
+                <VAlert v-if="isAlertVisible && summaryErrors.length" v-model="isAlertVisible" closable
+                    close-label="Close Alert" color="error" class="mb-4">
+                    <div class="d-flex flex-wrap" style="gap: 8px;">
+                        <span v-for="(msg, index) in summaryErrors" :key="index" class="error-chip">
+                            {{ msg }}
+                        </span>
+                    </div>
+                </VAlert>
                 <VCardText class="d-flex justify-end flex-wrap gap-3">
                     <VBtn @click="updateData"> Update </VBtn>
                 </VCardText>
@@ -57,20 +59,6 @@ export default {
                     return "Required.";
                 },
             ],
-            nameMin: [
-                (value) => {
-                    if (!value) return "Required.";
-                    if (value.length < 3) return "Must be at least 3 characters.";
-                    return true;
-                },
-            ],
-            nameMax: [
-                (value) => {
-                    if (!value) return "Required.";
-                    if (value.length > 50) return "Must not exceed 50 characters.";
-                    return true;
-                },
-            ],
             insertData: {
                 question: "",
                 answer: "",
@@ -79,12 +67,31 @@ export default {
             paramsId: this.$route.params.id,
             errors: {},
             isAlertVisible: false,
+            requiredFieldsMeta: [
+                { label: 'Question', path: 'question' },
+                { label: 'Answer', path: 'answer' },
+            ],
         };
     },
     created() {
         this.fetchData();
     },
     methods: {
+        collectMissingFields() {
+            const missing = [];
+            this.requiredFieldsMeta.forEach(field => {
+                const value = this.insertData[field.path];
+                if (
+                    value === null || // null or undefined
+                    value === undefined ||
+                    value === '' ||
+                    (Array.isArray(value) && value.length === 0)
+                ) {
+                    missing.push(field.label);
+                }
+            });
+            return missing;
+        },
         async fetchData() {
             this.loader = true;
             await http
@@ -102,6 +109,18 @@ export default {
             this.loader = false;
         },
         async updateData() {
+            const checkValidation = await this.$refs.formSubmit.validate();
+            // Collect missing fields for summary
+            const missingFields = this.collectMissingFields();
+
+            if (!checkValidation.valid || missingFields.length > 0) {
+                this.summaryErrors = missingFields.map(f => `${f} is required.`);
+                this.isAlertVisible = true;
+                // Optionally scroll to alert
+                return;
+            } else {
+                this.summaryErrors = [];
+            }
             this.loader = true;
             http
                 .post("faq/update/" + this.paramsId, this.insertData)
@@ -112,6 +131,7 @@ export default {
                             path: "/faq/list/",
                         });
                         this.isAlertVisible = false;
+                        this.summaryErrors = [];
                     } else {
                         this.$toast.error(res.data.message);
                         this.errors = res.data.data;
@@ -126,3 +146,15 @@ export default {
     },
 };
 </script>
+<style scoped>
+.custom-label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
+}
+
+.red-asterisk {
+    color: red;
+}
+</style>

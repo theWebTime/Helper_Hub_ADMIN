@@ -1,35 +1,48 @@
 <template>
     <div>
         <GlobalBreadCrumbsVue></GlobalBreadCrumbsVue>
-        <VCard title="Add Sub Service Type Detail">
-            <VAlert v-model="isAlertVisible" closable close-label="Close Alert" color="error">
-                <ul v-for="(value, key) in errors" :key="key">
-                    <li v-for="(value1, key1) in value" :key="key1">-> {{ value1 }}</li>
-                </ul>
-                {{ value }}
-            </VAlert>
+        <VCard title="Add Sub Service Pricing">
             <VForm ref="formSubmit">
                 <VCardText>
                     <VRow>
                         <VCol cols="12" md="6">
+                            <label class="custom-label">
+                                Select Service <span class="red-asterisk">*</span>
+                            </label>
                             <AppSelect v-model="insertData.service_id" :items="data_fetch_service"
-                                :rules="[globalRequire].flat()" item-title="name" item-value="id"
-                                label="Select Service" />
+                                :rules="[globalRequire].flat()" item-title="name" item-value="id" />
                         </VCol>
                         <VCol cols="12" md="6">
+                            <label class="custom-label">
+                                Select Sub Service Slug Name <span class="red-asterisk">*</span>
+                            </label>
                             <AppSelect v-model="insertData.subservice_type_name_slug"
                                 :items="data_fetch_subservice_type_name_slug" :rules="[globalRequire].flat()"
-                                item-title="name" item-value="slug" label="Select Sub Service Slug Name" />
+                                item-title="name" item-value="slug" />
                         </VCol>
                         <VCol cols="12" md="6">
-                            <AppTextField :rules="[globalRequire].flat()" v-model="insertData.label" label="Label" />
+                            <label class="custom-label">
+                                Label <span class="red-asterisk">*</span>
+                            </label>
+                            <AppTextField :rules="[globalRequire].flat()" v-model="insertData.label"
+                                placeholder="Ex: 1 BHK, 2 BHK" />
                         </VCol>
                         <VCol cols="12" md="6">
-                            <AppTextField v-model="insertData.price" :rules="[globalRequire].flat()" typee="number"
-                                label="Price" />
+                            <label class="custom-label">
+                                Price <span class="red-asterisk">*</span>
+                            </label>
+                            <AppTextField v-model="insertData.price" :rules="[globalRequire].flat()" typee="number" />
                         </VCol>
                     </VRow>
                 </VCardText>
+                <VAlert v-if="isAlertVisible && summaryErrors.length" v-model="isAlertVisible" closable
+                    close-label="Close Alert" color="error" class="mb-4">
+                    <div class="d-flex flex-wrap" style="gap: 8px;">
+                        <span v-for="(msg, index) in summaryErrors" :key="index" class="error-chip">
+                            {{ msg }}
+                        </span>
+                    </div>
+                </VAlert>
                 <VCardText class="d-flex justify-end flex-wrap gap-3">
                     <VBtn @click="saveData"> Save </VBtn>
                 </VCardText>
@@ -78,14 +91,34 @@ export default {
             loader: false,
             errors: {},
             isAlertVisible: false,
+            requiredFieldsMeta: [
+                { label: 'Service', path: 'service_id' },
+                { label: 'Sub Service Slug Name', path: 'subservice_type_name_slug' },
+                { label: 'Label', path: 'label' },
+                { label: 'Price', path: 'price' },
+            ],
         };
     },
     created() {
         this.fetch_service();
-
         this.fetch_sub_service_type_name();
     },
     methods: {
+        collectMissingFields() {
+            const missing = [];
+            this.requiredFieldsMeta.forEach(field => {
+                const value = this.insertData[field.path];
+                if (
+                    value === null || // null or undefined
+                    value === undefined ||
+                    value === '' ||
+                    (Array.isArray(value) && value.length === 0)
+                ) {
+                    missing.push(field.label);
+                }
+            });
+            return missing;
+        },
         fetch_service() {
             http
                 .get("/sub-service/service-name-list")
@@ -111,16 +144,29 @@ export default {
                 });
         },
         async saveData() {
+            const checkValidation = await this.$refs.formSubmit.validate();
+            // Collect missing fields for summary
+            const missingFields = this.collectMissingFields();
+
+            if (!checkValidation.valid || missingFields.length > 0) {
+                this.summaryErrors = missingFields.map(f => `${f} is required.`);
+                this.isAlertVisible = true;
+                // Optionally scroll to alert
+                return;
+            } else {
+                this.summaryErrors = [];
+            }
             this.loader = true;
             http
                 .post("/sub-service-type-detail/store", this.insertData)
                 .then((res) => {
                     if (res.data.success) {
                         this.$router.push({
-                            path: "/subServiceTypeDetail/list/",
+                            path: "/subServicePricing/list/",
                         });
                         this.$toast.success(res.data.message);
                         this.isAlertVisible = false;
+                        this.summaryErrors = [];
                     } else {
                         this.$toast.error(res.data.message);
                         this.errors = res.data.data;
@@ -136,3 +182,15 @@ export default {
     },
 };
 </script>
+<style scoped>
+.custom-label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
+}
+
+.red-asterisk {
+    color: red;
+}
+</style>
