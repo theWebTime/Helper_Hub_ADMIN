@@ -4,19 +4,17 @@
         <br />
         <VDivider />
         <VCard>
-            <VAlert v-model="isAlertVisible" closable close-label="Close Alert" color="error">
-                <ul v-for="(value, key) in errors" :key="key">
-                    <li v-for="(value1, key1) in value" :key="key1">-> {{ value1 }}</li>
-                </ul>
-                {{ value }}
-            </VAlert>
             <VForm ref="formSubmit">
                 <VCardText>
                     <h3>Update Site Setting</h3>
                     <br />
                     <VRow>
                         <VCol cols="12" md="6">
-                            <v-file-input accept="image/*" v-model="logo" label="Logo" ref="file"></v-file-input>
+                            <label class="custom-label">
+                                Logo <span class="red-asterisk">*</span>
+                            </label>
+                            <v-file-input accept="image/*" :rules="[globalRequire].flat()" v-model="logo"
+                                ref="file"></v-file-input>
                         </VCol>
                         <VCol cols="12" md="6">
                             <VAvatar size="100">
@@ -24,50 +22,92 @@
                             </VAvatar>
                         </VCol>
                         <VCol cols="12" md="4">
-                            <AppTextField v-model="insertData.razorpay_key_id" label="Razor Pay Key" />
+                            <label class="custom-label">
+                                Razor Pay Key <span class="red-asterisk">*</span>
+                            </label>
+                            <AppTextField v-model="insertData.razorpay_key_id" :rules="[globalRequire].flat()" />
                         </VCol>
                         <VCol cols="12" md="4">
-                            <AppTextField v-model="insertData.razorpay_key_secret" label="Razor Par Key Secret" />
+                            <label class="custom-label">
+                                Razor Pay Key Secret <span class="red-asterisk">*</span>
+                            </label>
+                            <AppTextField v-model="insertData.razorpay_key_secret" :rules="[globalRequire].flat()" />
                         </VCol>
                         <VCol cols="12" md="4">
-                            <AppTextField v-model="insertData.platform_fee_value" label="Platform Fee Value" />
+                            <label class="custom-label">
+                                Platform Fee <span class="red-asterisk">*</span>
+                            </label>
+                            <AppTextField v-model="insertData.platform_fee_value" type="number"
+                                :rules="[globalRequire].flat()" />
                         </VCol>
                         <VCol cols="12" md="4">
-                            <AppTextField v-model="insertData.cancellation_charges" label="Cancellation Charge" />
+                            <label class="custom-label">
+                                Cancellation Charge <span class="red-asterisk">*</span>
+                            </label>
+                            <AppTextField v-model="insertData.cancellation_charges" type="number"
+                                :rules="[globalRequire].flat()" />
                         </VCol>
                         <VCol cols="12" md="4">
-                            <AppTextField v-model="insertData.company_name" label="Company Name" />
+                            <label class="custom-label">
+                                Company Name <span class="red-asterisk">*</span>
+                            </label>
+                            <AppTextField v-model="insertData.company_name" :rules="[globalRequire].flat()" />
                         </VCol>
                         <VCol cols="12" md="4">
-                            <v-textarea v-model="insertData.address" label="Address" />
+                            <label class="custom-label">
+                                Address <span class="red-asterisk">*</span>
+                            </label>
+                            <v-textarea v-model="insertData.address" :rules="[globalRequire].flat()" />
                         </VCol>
                         <VCol cols="12" md="4">
-                            <AppTextField v-model="insertData.phone" typee="number" label="Phone" />
+                            <label class="custom-label">
+                                Phone Number <span class="red-asterisk">*</span>
+                            </label>
+                            <AppTextField v-model="insertData.phone" :rules="[globalRequire].flat()" type="number" />
                         </VCol>
                         <VCol cols="12" md="4">
-                            <AppTextField v-model="insertData.email" :rules="[email].flat()" label="Email" />
+                            <label class="custom-label">
+                                Email <span class="red-asterisk">*</span>
+                            </label>
+                            <AppTextField v-model="insertData.email" :rules="[globalRequire, email].flat()" />
                         </VCol>
                         <VCol cols="12" md="4">
-                            <AppTextField v-model="insertData.about_us" label="About Us" />
+                            <label class="custom-label">
+                                About US <span class="red-asterisk">*</span>
+                            </label>
+                            <AppTextField v-model="insertData.about_us" :rules="[globalRequire].flat()" />
                         </VCol>
-                        <VCol cols="12" md="4">
+                        <!-- <VCol cols="12" md="4">
                             <AppTextField v-model="insertData.terms_conditions" label="Terms & Conditions" />
                         </VCol>
                         <VCol cols="12" md="4">
                             <AppTextField v-model="insertData.privacy_policy" label="Privacy Policy" />
+                        </VCol> -->
+                        <VCol cols="12" md="4">
+                            <label class="custom-label">
+                                Refund Policy <span class="red-asterisk">*</span>
+                            </label>
+                            <AppTextField v-model="insertData.refund_policy" :rules="[globalRequire].flat()" />
                         </VCol>
                         <VCol cols="12" md="4">
-                            <AppTextField v-model="insertData.refund_policy" label="Refund Policy" />
+                            <label class="custom-label">
+                                Support Email <span class="red-asterisk">*</span>
+                            </label>
+                            <AppTextField v-model="insertData.support_email" :rules="[globalRequire, email].flat()" />
                         </VCol>
                         <VCol cols="12" md="4">
-                            <AppTextField v-model="insertData.support_email" :rules="[email].flat()"
-                                label="Support Email" />
+                            <label class="custom-label">
+                                Support Phone Number <span class="red-asterisk">*</span>
+                            </label>
+                            <AppTextField v-model="insertData.support_phone" :rules="[globalRequire].flat()"
+                                typee="number" />
                         </VCol>
                         <VCol cols="12" md="4">
-                            <AppTextField v-model="insertData.support_phone" typee="number" label="Support Phone" />
-                        </VCol>
-                        <VCol cols="12" md="4">
-                            <AppTextField v-model="insertData.whatsapp_number" typee="number" label="Whatsapp Number" />
+                            <label class="custom-label">
+                                Whatsapp Number <span class="red-asterisk">*</span>
+                            </label>
+                            <AppTextField v-model="insertData.whatsapp_number" :rules="[globalRequire].flat()"
+                                type="number" />
                         </VCol>
                         <VCol cols="12" md="4">
                             <AppTextField v-model="insertData.facebook_url" label="Facebook URL" />
@@ -89,6 +129,14 @@
                         </VCol>
                     </VRow>
                 </VCardText>
+                <VAlert v-if="isAlertVisible && summaryErrors.length" v-model="isAlertVisible" closable
+                    close-label="Close Alert" color="error" class="mb-4">
+                    <div class="d-flex flex-wrap" style="gap: 8px;">
+                        <span v-for="(msg, index) in summaryErrors" :key="index" class="error-chip">
+                            {{ msg }}
+                        </span>
+                    </div>
+                </VAlert>
                 <VCardText class="d-flex justify-end flex-wrap gap-3">
                     <VBtn @click="updateData"> Update </VBtn>
                 </VCardText>
@@ -157,12 +205,43 @@ export default {
             paramsId: this.$route.params.id,
             errors: {},
             isAlertVisible: false,
+            requiredFieldsMeta: [
+                { label: 'Logo', path: 'logo' },
+                { label: 'Razor Key', path: 'razorpay_key_id' },
+                { label: 'Razor Secret Key', path: 'razorpay_key_secret' },
+                { label: 'Platform Fee', path: 'platform_fee_value' },
+                { label: 'Cancellation Charge', path: 'cancellation_charges' },
+                { label: 'Company Name', path: 'company_name' },
+                { label: 'Address', path: 'address' },
+                { label: 'Email', path: 'email' },
+                { label: 'Phone', path: 'phone' },
+                { label: 'About Us', path: 'about_us' },
+                { label: 'Refund Policy', path: 'refund_policy' },
+                { label: 'Support Email', path: 'support_email' },
+                { label: 'Support Phone Number', path: 'support_phone' },
+                { label: 'Whatsapp Number', path: 'whatsapp_number' },
+            ],
         };
     },
     created() {
         this.fetchData();
     },
     methods: {
+        collectMissingFields() {
+            const missing = [];
+            this.requiredFieldsMeta.forEach(field => {
+                const value = this.insertData[field.path];
+                if (
+                    value === null || // null or undefined
+                    value === undefined ||
+                    value === '' ||
+                    (Array.isArray(value) && value.length === 0)
+                ) {
+                    missing.push(field.label);
+                }
+            });
+            return missing;
+        },
         fetchData() {
             this.loader = true;
             http
@@ -201,37 +280,60 @@ export default {
         },
         async updateData() {
             const checkValidation = await this.$refs.formSubmit.validate();
-            if (checkValidation.valid) {
-                const formData = new FormData();
-                if (this.logo) {
-                    const imageData = this.$refs.file.files[0];
-                    formData.append("logo", imageData);
-                } else {
-                    formData.append("logo", "");
-                }
-                for (let x in this.insertData) {
-                    formData.append(x, this.insertData[x]);
-                }
-                this.loader = true;
-                http
-                    .post("site-setting/store", formData)
-                    .then((res) => {
-                        if (res.data.success) {
-                            this.fetchData();
-                            this.$toast.success(res.data.message);
-                            this.isAlertVisible = false;
-                        } else {
-                            this.$toast.error(res.data.message);
-                            this.errors = res.data.data;
-                            this.isAlertVisible = true;
-                        }
-                        this.loader = false;
-                    })
-                    .catch((e) => {
-                        this.loader = false;
-                    });
+            // Collect missing fields for summary
+            const missingFields = this.collectMissingFields();
+
+            if (!checkValidation.valid || missingFields.length > 0) {
+                this.summaryErrors = missingFields.map(f => `${f} is required.`);
+                this.isAlertVisible = true;
+                // Optionally scroll to alert
+                return;
+            } else {
+                this.summaryErrors = [];
             }
+            const formData = new FormData();
+            if (this.logo) {
+                const imageData = this.$refs.file.files[0];
+                formData.append("logo", imageData);
+            } else {
+                formData.append("logo", "");
+            }
+            for (let x in this.insertData) {
+                formData.append(x, this.insertData[x]);
+            }
+            this.loader = true;
+            http
+                .post("site-setting/store", formData)
+                .then((res) => {
+                    if (res.data.success) {
+                        this.fetchData();
+                        this.$toast.success(res.data.message);
+                        this.isAlertVisible = false;
+                        this.summaryErrors = [];
+                    } else {
+                        this.$toast.error(res.data.message);
+                        this.errors = res.data.data;
+                        this.isAlertVisible = true;
+                    }
+                    this.loader = false;
+                })
+                .catch((e) => {
+                    this.loader = false;
+                });
+
         },
     },
 };
 </script>
+<style scoped>
+.custom-label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: rgba(var(--v-theme-on-surface), var(--v-high-emphasis-opacity));
+}
+
+.red-asterisk {
+    color: red;
+}
+</style>

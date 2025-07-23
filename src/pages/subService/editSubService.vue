@@ -36,7 +36,10 @@
                             <AppTextField :rules="[globalRequire].flat()" v-model="insertData.name" />
                         </VCol>
                         <VCol cols="12" md="6">
-                            <v-textarea v-model="insertData.description" label="Description" />
+                            <label class="custom-label">
+                                Description <span class="red-asterisk">*</span>
+                            </label>
+                            <v-textarea v-model="insertData.description" :rules="[globalRequire].flat()" />
                         </VCol>
                         <VCol cols="12" md="6">
                             <label class="custom-label">
@@ -90,20 +93,6 @@ export default {
                     return "Required.";
                 },
             ],
-            nameMin: [
-                (value) => {
-                    if (!value) return "Required.";
-                    if (value.length < 3) return "Must be at least 3 characters.";
-                    return true;
-                },
-            ],
-            nameMax: [
-                (value) => {
-                    if (!value) return "Required.";
-                    if (value.length > 50) return "Must not exceed 50 characters.";
-                    return true;
-                },
-            ],
             image: "",
             fetch_photo: "",
             insertData: {
@@ -124,6 +113,7 @@ export default {
                 { label: 'Slug Name', path: 'type_slugs' },
                 { label: 'Sub Service', path: 'name' },
                 { label: 'Status', path: 'status' },
+                { label: 'Description', path: 'description' },
             ],
         };
     },

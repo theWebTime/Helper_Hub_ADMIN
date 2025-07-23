@@ -6,8 +6,11 @@
                 <VCardText>
                     <VRow>
                         <VCol cols="12" md="6">
+                            <label class="custom-label">
+                                Pincode <span class="red-asterisk">*</span>
+                            </label>
                             <AppTextField :rules="[globalRequire, numberMin, numberMax].flat()"
-                                v-model="insertData.pin_code" label="Pincode" />
+                                v-model="insertData.pin_code" type="number" />
                         </VCol>
                         <VCol cols="12" md="3">
                             <label class="custom-label">

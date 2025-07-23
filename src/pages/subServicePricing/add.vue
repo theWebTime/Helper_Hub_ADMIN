@@ -31,7 +31,7 @@
                             <label class="custom-label">
                                 Price <span class="red-asterisk">*</span>
                             </label>
-                            <AppTextField v-model="insertData.price" :rules="[globalRequire].flat()" typee="number" />
+                            <AppTextField v-model="insertData.price" :rules="[globalRequire].flat()" type="number" />
                         </VCol>
                     </VRow>
                 </VCardText>

@@ -16,8 +16,9 @@
                             <label class="custom-label">
                                 Select Multiple Slug Name <span class="red-asterisk">*</span>
                             </label>
-                            <AppSelect v-model="insertData.type_slugs" :items="data_fetch_subservice_type_name_slug"
-                                :rules="[globalRequire].flat()" item-title="name" item-value="slug" multiple chips />
+                            <AppSelect v-model="insertData.type_slugs" :rules="[globalRequire].flat()"
+                                :items="data_fetch_subservice_type_name_slug" item-title="name" item-value="slug"
+                                multiple chips />
                         </VCol>
                         <VCol cols="12" md="4">
                             <label class="custom-label">
@@ -26,11 +27,17 @@
                             <AppTextField :rules="[globalRequire].flat()" v-model="insertData.name" />
                         </VCol>
                         <VCol cols="12" md="6">
-                            <v-textarea v-model="insertData.description" label="Description" />
+                            <label class="custom-label">
+                                Description <span class="red-asterisk">*</span>
+                            </label>
+                            <v-textarea v-model="insertData.description" :rules="[globalRequire].flat()" />
                         </VCol>
                         <VCol cols="12" md="6">
-                            <label>Service Image</label>
-                            <v-file-input accept="image/*" v-model="image" ref="file"></v-file-input>
+                            <label class="custom-label">
+                                Sub Service Image <span class="red-asterisk">*</span>
+                            </label>
+                            <v-file-input accept="image/*" v-model="image" :rules="[globalRequire].flat()"
+                                ref="file"></v-file-input>
                         </VCol>
                     </VRow>
                 </VCardText>
@@ -73,12 +80,6 @@ export default {
                     return "Required.";
                 },
             ],
-            nameMin: [
-                (value) => {
-                    if (value?.length >= 3) return true;
-                    return "Must be at least 3 characters.";
-                },
-            ],
             image: "",
             insertData: {
                 service_id: "",
@@ -95,6 +96,8 @@ export default {
                 { label: 'Service', path: 'service_id' },
                 { label: 'Slug Name', path: 'type_slugs' },
                 { label: 'Sub Service', path: 'name' },
+                { label: 'Sub Service Image', path: 'image' },
+                { label: 'Description', path: 'description' },
             ],
         };
     },
