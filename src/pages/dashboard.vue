@@ -78,7 +78,6 @@
 
 <script>
 import GlobalBreadCrumbsVue from "@/components/common/GlobalBreadCrumbs.vue";
-import http from "../http-common";
 
 export default {
   components: { GlobalBreadCrumbsVue },
@@ -93,7 +92,7 @@ export default {
     };
   },
   created() {
-    this.fetchDashboardData();
+    // this.fetchDashboardData();
   },
   methods: {
     async fetchDashboardData() {

@@ -24,7 +24,8 @@
                             <label class="custom-label">
                                 Label <span class="red-asterisk">*</span>
                             </label>
-                            <AppTextField :rules="[globalRequire].flat()" v-model="insertData.label" />
+                            <AppTextField :rules="[globalRequire].flat()" v-model="insertData.label"
+                                placeholder="Ex: 1 BHK, 2 BHK, 1 Hour, 2 Hour" />
                         </VCol>
                         <VCol cols="12" md="6">
                             <label class="custom-label">

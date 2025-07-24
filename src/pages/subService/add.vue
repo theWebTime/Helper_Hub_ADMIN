@@ -96,7 +96,6 @@ export default {
                 { label: 'Service', path: 'service_id' },
                 { label: 'Slug Name', path: 'type_slugs' },
                 { label: 'Sub Service', path: 'name' },
-                { label: 'Sub Service Image', path: 'image' },
                 { label: 'Description', path: 'description' },
             ],
         };

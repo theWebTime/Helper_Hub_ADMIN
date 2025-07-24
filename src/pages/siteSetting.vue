@@ -11,10 +11,9 @@
                     <VRow>
                         <VCol cols="12" md="6">
                             <label class="custom-label">
-                                Logo <span class="red-asterisk">*</span>
+                                Logo
                             </label>
-                            <v-file-input accept="image/*" :rules="[globalRequire].flat()" v-model="logo"
-                                ref="file"></v-file-input>
+                            <v-file-input accept="image/*" v-model="logo" ref="file"></v-file-input>
                         </VCol>
                         <VCol cols="12" md="6">
                             <VAvatar size="100">
@@ -206,7 +205,6 @@ export default {
             errors: {},
             isAlertVisible: false,
             requiredFieldsMeta: [
-                { label: 'Logo', path: 'logo' },
                 { label: 'Razor Key', path: 'razorpay_key_id' },
                 { label: 'Razor Secret Key', path: 'razorpay_key_secret' },
                 { label: 'Platform Fee', path: 'platform_fee_value' },

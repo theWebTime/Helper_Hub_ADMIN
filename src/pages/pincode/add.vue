@@ -10,7 +10,8 @@
                                 Pincode <span class="red-asterisk">*</span>
                             </label>
                             <AppTextField :rules="[globalRequire, numberMin, numberMax].flat()" type="number"
-                                v-model="insertData.pin_code" />
+                                v-model="insertData.pin_code" :error="!!errors.pin_code"
+                                :error-messages="errors.pin_code" />
                         </VCol>
                     </VRow>
                 </VCardText>
