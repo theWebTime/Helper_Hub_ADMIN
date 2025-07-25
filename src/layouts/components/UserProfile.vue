@@ -1,5 +1,5 @@
 <script setup>
-import Helper_Hub from "@/assets/images/Helper_Hub_Round.png";
+import Helper_Hub from "@/assets/images/hh_round_header.png";
 </script>
 
 <template>

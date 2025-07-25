@@ -16,7 +16,7 @@
                             <label class="custom-label">
                                 Status <span class="red-asterisk">*</span>
                             </label>
-                            <VRadioGroup :rules="[globalRequire].flat()" v-model="insertData.status" inline>
+                            <VRadioGroup v-model="insertData.status" inline>
                                 <VRadio label="Active" :value="1" density="compact" />
                                 <VRadio label="In-Active" :value="0" density="compact" />
                             </VRadioGroup>
@@ -85,7 +85,6 @@ export default {
             isAlertVisible: false,
             requiredFieldsMeta: [
                 { label: 'Pincode', path: 'pin_code' },
-                { label: 'Status', path: 'status' },
             ],
         };
     },

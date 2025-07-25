@@ -9,16 +9,15 @@
                         { value: 25, title: '25' },
                         { value: 50, title: '50' },
                         { value: 100, title: '100' },
-                        { value: -1, title: 'All' },
-                    ]" disabled style="width: 6.25rem" />
+                    ]" label="Per Page" style="width: 6.25rem" />
                 </div>
                 <VSpacer />
 
                 <div class="app-user-search-filter d-flex align-center flex-wrap gap-4">
                     <!-- 👉 Search  -->
-                    <div style="inline-size: 10rem">
-                        <AppTextField v-model="options.search" placeholder="Search" density="compact"
-                            @keyup="fetchData()" />
+                    <div style="inline-size: 15rem">
+                        <AppTextField v-model="options.search" label="Search By Service Name" density="compact"
+                            @keyup="fetchData()" placeholder="Ex: One Time Service" />
                     </div>
                 </div>
             </VCardText>
@@ -65,10 +64,10 @@
                 <p class="text-sm text-disabled mb-0">
                     {{ paginationMeta(options, data.total) }}
                 </p>
-                <VPagination v-model="options.page" :length="Math.ceil(this.data.total / options.itemsPerPage)"
+                <VPagination v-model="options.page" :length="Math.ceil(data.total / options.itemsPerPage)"
                     :total-visible="$vuetify.display.xs
                         ? 1
-                        : Math.ceil(this.data.total / options.itemsPerPage)
+                        : Math.ceil(data.total / options.itemsPerPage)
                         " @click="changePage()">
                 </VPagination>
             </div>
@@ -94,11 +93,16 @@ export default {
                     return "Required.";
                 },
             ],
-            data: {},
+            data: {
+                data: [],
+                total: 0,
+                current_page: 1,
+                per_page: 10,
+            },
             loader: false,
             options: {
                 page: 1,
-                itemsPerPage: 50,
+                itemsPerPage: 10,
                 search: "",
             },
             rules: {
@@ -112,9 +116,14 @@ export default {
     created() {
         this.fetchData();
     },
+    watch: {
+        'options.itemsPerPage'(val) {
+            this.options.page = 1
+            this.fetchData()
+        },
+    },
     methods: {
         changePage() {
-            this.options.page = this.options.page;
             this.fetchData();
         },
         fetchData() {
