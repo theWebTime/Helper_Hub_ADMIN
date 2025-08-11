@@ -261,10 +261,10 @@ export default {
   data() {
     return {
       summaryCards: [
-        { label: "Total Booking", value: 0 },
-        { label: "Pending Payment", value: 0 },
+        { label: "Accepted Booking", value: 0 },
+        { label: "Confirmed Booking", value: 0 },
         { label: "Today's Booking", value: 0 },
-        { label: "Cancelled Booking", value: 0 },
+        { label: "Pending Payment", value: 0 },
       ],
       loader: false,
       bookings: {
@@ -337,12 +337,12 @@ export default {
     },
     fetchStats() {
       const styleMap = {
-        "Total Booking": {
+        "Accepted Booking": {
           icon: 'mdi-calendar-check',
           bgGradient: 'linear-gradient(135deg, #2196F3, #21CBF3)',
           iconBg: '#1976D2',
         },
-        "Pending Payment": {
+        "Confirmed Booking": {
           icon: 'mdi-cash-clock',
           bgGradient: 'linear-gradient(135deg, #FF9800, #FFC107)',
           iconBg: '#F57C00',
@@ -352,7 +352,7 @@ export default {
           bgGradient: 'linear-gradient(135deg, #4CAF50, #81C784)',
           iconBg: '#388E3C',
         },
-        "Cancelled Booking": {
+        "Pending Payment": {
           icon: 'mdi-calendar-remove',
           bgGradient: 'linear-gradient(135deg, #F44336, #E57373)',
           iconBg: '#D32F2F',
@@ -362,14 +362,14 @@ export default {
       http.get("/booking-status-report").then((res) => {
         this.summaryCards = [
           {
-            label: "Total Booking",
-            value: res.data.total_bookings,
-            ...styleMap["Total Booking"],
+            label: "Accepted Booking",
+            value: res.data.booking_accepted,
+            ...styleMap["Accepted Booking"],
           },
           {
-            label: "Pending Payment",
-            value: res.data.pending_payments,
-            ...styleMap["Pending Payment"],
+            label: "Confirmed Booking",
+            value: res.data.completed_bookings,
+            ...styleMap["Confirmed Booking"],
           },
           {
             label: "Today's Booking",
@@ -377,9 +377,9 @@ export default {
             ...styleMap["Today's Booking"],
           },
           {
-            label: "Cancelled Booking",
-            value: res.data.cancelled_bookings,
-            ...styleMap["Cancelled Booking"],
+            label: "Pending Payment",
+            value: res.data.pending_payments,
+            ...styleMap["Pending Payment"],
           },
         ];
       });
