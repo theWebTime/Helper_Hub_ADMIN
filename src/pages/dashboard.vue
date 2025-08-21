@@ -172,12 +172,13 @@
           <div><strong>Service Price:</strong> &nbsp;{{ selectedBooking.service_price }}</div>
           <div><strong>Platform Fee:</strong> &nbsp;{{ selectedBooking.platform_fee }}</div>
           <div><strong>Total:</strong> &nbsp;₹{{ selectedBooking.total_amount }}</div>
-          <div><strong>Schedule Date:</strong>{&nbsp;{ formatDate(selectedBooking.schedule_date) }}
+          <div><strong>Schedule Date:</strong>&nbsp;{{ formatDate(selectedBooking.schedule_date) }}
             <template v-if="selectedBooking.service_id == 2"> to {{ formatDate(selectedBooking.schedule_end_date)
             }}</template>
             at {{ selectedBooking.schedule_time }}
           </div>
           <div><strong>Dog:</strong> &nbsp;{{ selectedBooking.is_dog ? "Yes" : "No" }}</div>
+          <div><strong>Gender:</strong> &nbsp;{{ selectedBooking.gender ? "Female" : "Male" }}</div>
           <div><strong>Special Instructions:</strong> &nbsp;{{ selectedBooking.special_instructions }}</div>
           <div>
             <strong>Payment Status:</strong>
