@@ -258,15 +258,33 @@ export default {
                         this.insertData.terms_conditions = res.data.data.terms_conditions;
                         this.insertData.privacy_policy = res.data.data.privacy_policy;
                         this.insertData.refund_policy = res.data.data.refund_policy;
-                        this.insertData.support_email = res.data.data.support_email;
-                        this.insertData.support_phone = res.data.data.support_phone;
-                        this.insertData.facebook_url = res.data.data.facebook_url;
-                        this.insertData.instagram_url = res.data.data.instagram_url;
-                        this.insertData.twitter_url = res.data.data.twitter_url;
-                        this.insertData.linkedin_url = res.data.data.linkedin_url;
-                        this.insertData.youtube_url = res.data.data.youtube_url;
-                        this.insertData.whatsapp_number = res.data.data.whatsapp_number;
-                        this.insertData.telegram_url = res.data.data.telegram_url;
+                        this.insertData.support_email = res.data.data.support_email == null
+                            ? ""
+                            : res.data.data.support_email;
+                        this.insertData.support_phone = res.data.data.support_phone == null
+                            ? ""
+                            : res.data.data.support_phone;
+                        this.insertData.facebook_url = res.data.data.facebook_url == null
+                            ? ""
+                            : res.data.data.facebook_url;
+                        this.insertData.instagram_url = res.data.data.instagram_url == null
+                            ? ""
+                            : res.data.data.instagram_url;
+                        this.insertData.twitter_url = res.data.data.twitter_url == null
+                            ? ""
+                            : res.data.data.twitter_url;
+                        this.insertData.linkedin_url = res.data.data.linkedin_url == null
+                            ? ""
+                            : res.data.data.linkedin_url;
+                        this.insertData.youtube_url = res.data.data.youtube_url == null
+                            ? ""
+                            : res.data.data.youtube_url;
+                        this.insertData.whatsapp_number = res.data.data.whatsapp_number == null
+                            ? ""
+                            : res.data.data.whatsapp_number;
+                        this.insertData.telegram_url = res.data.data.telegram_url == null
+                            ? ""
+                            : res.data.data.telegram_url;
                         this.fetch_photo = res.data.data.logo;
                     }
                     this.loader = false;
